@@ -7,11 +7,14 @@ import com.datamountaineer.streamreactor.connect.transforms.LogicalFieldToString
 import org.apache.kafka.connect.data._
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.transforms.util.Requirements.requireStruct
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest._
+import org.scalatest.wordspec.AnyWordSpec
+import matchers.should._
 
-import scala.collection.JavaConversions._
+// import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
-class TestLogicalFieldToString extends WordSpec with Matchers {
+class TestLogicalFieldToString extends AnyWordSpec with Matchers {
   val OPTIONAL_TIMESTAMP_SCHEMA = Timestamp.builder().optional().build()
   val OPTIONAL_DECIMAL_SCHEMA = Decimal.builder(18).optional().build()
 
@@ -27,7 +30,7 @@ class TestLogicalFieldToString extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       FORMAT_CONFIG -> DECIMAL_FORMAT,
-      FIELDS_CONFIG -> "decimalValue1, decimalValue2")
+      FIELDS_CONFIG -> "decimalValue1, decimalValue2").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -46,7 +49,7 @@ class TestLogicalFieldToString extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       FORMAT_CONFIG -> DECIMAL_FORMAT,
-      FIELDS_CONFIG -> "decimalValue1")
+      FIELDS_CONFIG -> "decimalValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -65,7 +68,7 @@ class TestLogicalFieldToString extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       FORMAT_CONFIG -> DATE_FORMAT,
-      FIELDS_CONFIG -> "dateValue1, dateValue2")
+      FIELDS_CONFIG -> "dateValue1, dateValue2").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -84,7 +87,7 @@ class TestLogicalFieldToString extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       FORMAT_CONFIG -> DATE_FORMAT,
-      FIELDS_CONFIG -> "dateValue1")
+      FIELDS_CONFIG -> "dateValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -102,7 +105,7 @@ class TestLogicalFieldToString extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       FORMAT_CONFIG -> DATE_FORMAT,
-      FIELDS_CONFIG -> "decimalValue1")
+      FIELDS_CONFIG -> "decimalValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(false));

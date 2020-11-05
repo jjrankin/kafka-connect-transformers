@@ -11,9 +11,9 @@ import org.apache.kafka.connect.transforms.Transformation
 import org.apache.kafka.connect.transforms.util.Requirements.requireStruct
 import org.apache.kafka.connect.transforms.util.{SchemaUtil, SimpleConfig}
 
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
-
+// import scala.collection.JavaConverters._
+// import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 object MapKeyToString {
   private val PURPOSE = "Change map key to string"
@@ -62,10 +62,10 @@ abstract class MapKeyToString[R <: ConnectRecord[R]] extends Transformation[R] {
     }
     val updatedValue = new Struct(updatedSchema)
     
-    for (field <- value.schema.fields) {
+    for (field <- value.schema.fields.asScala) {
       if (isChangeable(field) && value.get(field) != null) {
         val fieldValue = value.get(field).asInstanceOf[util.Map[Object, Object]];
-        updatedValue.put(field.name, fieldValue.map {pair => (pair._1.toString, pair._2)}.asJava)
+        updatedValue.put(field.name, fieldValue.asScala.map {pair => (pair._1.toString, pair._2)}.asJava)
       } else {
         updatedValue.put(field.name, value.get(field))
       }
@@ -76,7 +76,7 @@ abstract class MapKeyToString[R <: ConnectRecord[R]] extends Transformation[R] {
   private def makeUpdatedSchema(schema: Schema) = {
     val builder = SchemaUtil.copySchemaBasics(schema, SchemaBuilder.struct)
 
-    for (field <- schema.fields) {
+    for (field <- schema.fields.asScala) {
       if (isChangeable(field)){
         builder.field(field.name, SchemaBuilder.map(
           Schema.OPTIONAL_STRING_SCHEMA,

@@ -22,8 +22,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.maiflai:gradle-scalatest:0.16'
-        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
+        classpath 'gradle.plugin.com.github.maiflai:gradle-scalatest:0.29'
+        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0'
         classpath 'net.researchgate:gradle-release:2.6.0'
     }
 }
@@ -40,18 +40,18 @@ allprojects {
     apply plugin: 'scala'
     apply plugin: 'maven'
     apply plugin: 'com.github.maiflai.scalatest'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
 
     ext {
-        scalaMajorVersion = '2.11'
-        scala = '2.11.7'
-        scalaCheck = '1.11.1'
-        scalaTest = '2.2.6'
+        scalaMajorVersion = '2.13'
+        scala = '2.13.3'
+        scalaCheck = '1.14.1'
+        scalaTest = '3.2.2'
         junit = '4.11'
-        confluentVersion = '4.0.0'
-        scalaLoggingVersion = '2.1.2'
-        kafkaVersion = '1.0.0'
+        confluentVersion = '6.0.0'
+        scalaLoggingVersion = '3.9.2'
+        kafkaVersion = '2.6.0'
         mockitoVersion = '1.10.19'
         jacksonxmlVersion = '2.6.5'
         slf4jVersion = "1.7.7"
@@ -63,6 +63,7 @@ allprojects {
         mavenCentral()
         maven { url "http://packages.confluent.io/maven/" }
         maven { url "http://repo.typesafe.com/typesafe/releases/" }
+        maven { url "https://mvnrepository.com/artifact" }
     }
 
     configurations {
@@ -73,7 +74,8 @@ allprojects {
     dependencies {
         provided "org.scala-lang:scala-library:$scala"
         provided "org.scala-lang:scala-compiler:$scala"
-        provided "com.typesafe.scala-logging:scala-logging-slf4j_$scalaMajorVersion:$scalaLoggingVersion"
+        provided "com.typesafe.scala-logging:scala-logging_$scalaMajorVersion:$scalaLoggingVersion"
+        // provided "com.typesafe.scala-logging:scala-logging-slf4j_$scalaMajorVersion:$scalaLoggingVersion"
         provided "org.apache.kafka:connect-json:$kafkaVersion"
         provided "org.apache.kafka:connect-transforms:$kafkaVersion"
         testCompile "org.mockito:mockito-all:$mockitoVersion"
@@ -83,6 +85,7 @@ allprojects {
         testCompile "org.apache.curator:curator-test:3.1.0"
         testCompile 'org.powermock:powermock-module-junit4:1.6.5'
         testRuntime 'org.pegdown:pegdown:1.1.0'
+        testRuntimeOnly "com.vladsch.flexmark:flexmark-all:0.36.8"
     }
 
     jar {

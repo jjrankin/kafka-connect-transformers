@@ -6,11 +6,14 @@ import com.datamountaineer.streamreactor.connect.transforms.NestingFields.Value
 import org.apache.kafka.connect.data._
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.transforms.util.Requirements.requireStruct
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest._
+import org.scalatest.wordspec.AnyWordSpec
+import matchers.should._
 
-import scala.collection.JavaConversions._
+// import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
-class TestNestingFields extends WordSpec with Matchers {
+class TestNestingFields extends AnyWordSpec with Matchers {
   val OPTIONAL_TIMESTAMP_SCHEMA = Timestamp.builder().optional().build()
   val OPTIONAL_DECIMAL_SCHEMA = Decimal.builder(18).optional().build()
 
@@ -21,7 +24,7 @@ class TestNestingFields extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       NESTED_NAME_CONFIG -> "id",
-      FIELDS_CONFIG -> "dateValue1, decimalValue1")
+      FIELDS_CONFIG -> "dateValue1, decimalValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -43,7 +46,7 @@ class TestNestingFields extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       NESTED_NAME_CONFIG -> "id",
-      FIELDS_CONFIG -> "decimalValue1")
+      FIELDS_CONFIG -> "decimalValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -62,7 +65,7 @@ class TestNestingFields extends WordSpec with Matchers {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
       NESTED_NAME_CONFIG -> "id",
-      FIELDS_CONFIG -> "decimalValue1")
+      FIELDS_CONFIG -> "decimalValue1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));

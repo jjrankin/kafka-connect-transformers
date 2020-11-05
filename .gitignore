@@ -8,3 +8,8 @@
 /.project
 /out/
 /*.iml
+/.bloop
+/.metals
+/.vscode
+/bin
+/gradle

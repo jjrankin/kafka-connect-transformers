@@ -12,8 +12,9 @@ import org.apache.kafka.connect.transforms.Transformation
 import org.apache.kafka.connect.transforms.util.Requirements.requireStruct
 import org.apache.kafka.connect.transforms.util.{SchemaUtil, SimpleConfig}
 
-import scala.collection.JavaConversions._
-
+// import scala.collection.JavaConversions._
+// import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 object LogicalFieldToString {
   private val TO_CONNECT_LOGICAL_CONVERTERS = Map[String, (String) => Format] (
@@ -73,7 +74,7 @@ abstract class LogicalFieldToString[R <: ConnectRecord[R]] extends Transformatio
     }
     val updatedValue = new Struct(updatedSchema)
     
-    for (field <- value.schema.fields) {
+    for (field <- value.schema.fields.asScala) {
       if (isChangeable(field) && value.get(field) != null) {
         val formatter = LogicalFieldToString.TO_CONNECT_LOGICAL_CONVERTERS.get(field.schema.name).get(this.format)
         updatedValue.put(field.name, formatter.format(value.get(field)))
@@ -86,14 +87,14 @@ abstract class LogicalFieldToString[R <: ConnectRecord[R]] extends Transformatio
   private def makeUpdatedSchema(schema: Schema) = {
     val builder = SchemaUtil.copySchemaBasics(schema, SchemaBuilder.struct)
 
-    for (field <- schema.fields) {
+    for (field <- schema.fields.asScala) {
       if (isChangeable(field)) builder.field(field.name, Schema.OPTIONAL_STRING_SCHEMA)
       else builder.field(field.name, field.schema)
     }
     builder.build
   }
 
-  private def isChangeable(field: Field) = fields.contains(field.name) && LogicalFieldToString.TO_CONNECT_LOGICAL_CONVERTERS.containsKey(field.schema.name)
+  private def isChangeable(field: Field) = fields.contains(field.name) && LogicalFieldToString.TO_CONNECT_LOGICAL_CONVERTERS.asJava.containsKey(field.schema.name)
 
   override def close(): Unit = {
     schemaUpdateCache = null

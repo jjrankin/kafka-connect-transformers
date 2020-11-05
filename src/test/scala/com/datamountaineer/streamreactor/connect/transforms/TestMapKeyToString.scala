@@ -6,11 +6,14 @@ import com.datamountaineer.streamreactor.connect.transforms.MapKeyToString.Value
 import org.apache.kafka.connect.data._
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.transforms.util.Requirements.requireStruct
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest._
+import org.scalatest.wordspec.AnyWordSpec
+import matchers.should._
 
-import scala.collection.JavaConversions._
+// import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
-class TestMapKeyToString extends WordSpec with Matchers {
+class TestMapKeyToString extends AnyWordSpec with Matchers {
   val MAP_SCHEMA = SchemaBuilder.map(Schema.OPTIONAL_INT64_SCHEMA, Schema.OPTIONAL_STRING_SCHEMA).optional().build();
 
   val FIELDS_CONFIG = "fields"
@@ -18,7 +21,7 @@ class TestMapKeyToString extends WordSpec with Matchers {
   "should transform all map key to string schema" in {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
-      FIELDS_CONFIG -> "map1, map2")
+      FIELDS_CONFIG -> "map1, map2").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
@@ -36,7 +39,7 @@ class TestMapKeyToString extends WordSpec with Matchers {
   "should transform only one map key to string schema" in {
     val transform = new Value[SourceRecord];
     transform.configure(Map(
-      FIELDS_CONFIG -> "map1")
+      FIELDS_CONFIG -> "map1").asJava
     )
 
     val transformedRecord = transform.apply(mockRecord(true));
