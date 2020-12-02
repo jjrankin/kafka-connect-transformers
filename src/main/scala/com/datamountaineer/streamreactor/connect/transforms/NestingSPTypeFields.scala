@@ -69,10 +69,10 @@ abstract class NestingSPTypeFields[R <: ConnectRecord[R]] extends Transformation
     val value = requireMap(operatingValue(record), NestingSPTypeFields.PURPOSE)
     val updatedValue = new util.HashMap[String, AnyRef](value)
 
-    println("applySchemaless1 -- Value: ", value, "Updated Value: ", updatedValue)
+    // println("applySchemaless1 -- Value: ", value, "Updated Value: ", updatedValue)
 
     updatedValue.put(nestedName, value.asScala.filterKeys(k => fields.contains(k)))
-    println("applySchemaless2 -- Value: ", value, "Updated Value: ", updatedValue)
+    // println("applySchemaless2 -- Value: ", value, "Updated Value: ", updatedValue)
     newRecord(record, null, updatedValue)
   }
 
@@ -86,10 +86,10 @@ abstract class NestingSPTypeFields[R <: ConnectRecord[R]] extends Transformation
     val newNestedSchema = updatedSchema.field(nestedName).schema
     val newNestedValue = new Struct(newNestedSchema)
     val updatedValue = new Struct(updatedSchema)
-    println("applyWithSchema1 -- Value: ", value, "Updated Value: ", updatedValue)
+    // println("applyWithSchema1 -- Value: ", value, "Updated Value: ", updatedValue)
     
     for (field <- value.schema.fields.asScala) {
-      println(s"FIELD NAME: ${field.name}")
+      // println(s"FIELD NAME: ${field.name}")
       updatedValue.put(field.name, value.get(field))
     }
     
@@ -105,7 +105,7 @@ abstract class NestingSPTypeFields[R <: ConnectRecord[R]] extends Transformation
     }
     updatedValue.put(nestedName, newNestedValue)
 
-    println("applyWithSchema3 -- Value: ", value, "Updated Value: ", updatedValue)
+    // println("applyWithSchema3 -- Value: ", value, "Updated Value: ", updatedValue)
 
     newRecord(record, updatedSchema, updatedValue)
   }
@@ -121,7 +121,7 @@ abstract class NestingSPTypeFields[R <: ConnectRecord[R]] extends Transformation
     nestedStruct.field(NestingSPTypeFields.TYPE_CODE, Schema.STRING_SCHEMA)
     nestedStruct.field(NestingSPTypeFields.TYPE_DESCRIPTION, Schema.STRING_SCHEMA)
     builder.field(nestedName, nestedStruct)
-    println(s"Builder2: ${builder.schema.toString}")
+    // println(s"Builder2: ${builder.schema.toString}")
     for (field <- schema.fields.asScala) {
       // if (field.name != NestingSPTypeFields.ORIG_TYPE_CODE)
       builder.field(field.name, field.schema)
